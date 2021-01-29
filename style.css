@@ -168,3 +168,24 @@ input::-webkit-search-results-decoration {
     opacity: 1;
     transition: 500ms;
 }
+
+@media screen and (max-width: 770px) {
+    .recipe__list_item_img {
+        width: 250px;
+        height: 250px;
+    }
+    .recipe__list_item_info, .recipe__list_item_name {
+        width: 250px;
+    }
+    .recipe__search_title {
+        font-size: 30px;
+    }
+    .recipe__search_input {
+        background-position: 310px center;
+    }
+}
+@media screen and (max-width: 460px) {
+    .recipe__search_input {
+        width: 100%;
+    }
+}
