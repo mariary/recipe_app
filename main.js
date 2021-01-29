@@ -43,28 +43,32 @@ prev_btn.addEventListener('click', function (evt) {
 function DopFunc(evt) {
     evt.preventDefault();
     search_value = evt.target.querySelector('.recipe__search_input').value;
-    getResults(search_value);
-    container.classList.remove('start_position')
-    prev_btn.classList.remove('visible')
-    next_btn.classList.add('visible')
-    prev_btn.classList.remove('hidden')
-    next_btn.classList.add('hidden')
+
+    if (/[а-я]/i.test(search_value) === true) {
+        alert('You should use English!')
+    } else {
+        getResults(search_value);
+        container.classList.remove('start_position')
+        prev_btn.classList.remove('visible')
+        next_btn.classList.add('visible')
+        prev_btn.classList.remove('hidden')
+        next_btn.classList.add('hidden')
+    }
 };
 
 
 function getResults(name) {
-    console.log(name);
     let url = `https://api.edamam.com/search?q=${name}&app_id=${api.id}&app_key=${api.key}&from=${page.from}&to=${page.to}`;
-    console.log(url);
     fetch(url)
         .then(recipe => {
             return recipe.json()
 
         }).then(data => {
+        if (data.count === 0) {
+            alert("There isn't such meals")
+        }
         return data.hits
     }).then(createHTML)
-
-
         .catch((error) => {
             alert("There is a mistake, please reload website")
         });
@@ -82,22 +86,19 @@ function changePage(mean) {
     }
     page.to = String(to)
     page.from = String(from)
-    console.log(page);
     getResults(search_value)
 }
 
 function createHTML(recipe) {
-    console.log(recipe)
     let newHTML = '';
-    let addStr  = 0;
+    let addStr = 0;
 
     recipe.map((one) => {
         addStr = one.recipe.totalTime
-        if (addStr===0) {
+        if (addStr === 0) {
             addStr = '';
-        }
-        else {
-            addStr+=' min'
+        } else {
+            addStr += ' min'
         }
         newHTML += `
         <div class="recipe__list_item">
@@ -112,9 +113,6 @@ function createHTML(recipe) {
             <a href="${one.recipe.url}" class="recipe__list_item_btn" target="_blank"></a>
         </div>
         `
-        if (one.recipe.totalTime === 0){
-            console.log(one.recipe.totalTime);
-        }
     });
     search_list.innerHTML = newHTML
 }
